@@ -1,3 +1,6 @@
+"
+An abstract base for runners and workers.
+"
 Class {
 	#name : #RmPeeToPeer,
 	#superclass : #Object,

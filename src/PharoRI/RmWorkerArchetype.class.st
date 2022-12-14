@@ -1,3 +1,8 @@
+"
+Define the archetype of images that will be spanwed as workers.
+The main method is `spawn`, which is what is being called by `RmRemoteRunner` to start the worker. 
+The runner will also call `RmWorkerArchetype>>#workerStartedOn:` to perform post spawned actions. 
+"
 Class {
 	#name : #RmWorkerArchetype,
 	#superclass : #Object,
