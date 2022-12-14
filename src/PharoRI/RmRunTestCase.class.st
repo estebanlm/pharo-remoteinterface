@@ -1,5 +1,5 @@
 "
-A command that will execute a test suite in the remote worker, informing its results.
+A command that will execute a test case in the remote worker, informing its results.
 Notice runing a test suite will also trigger notifications for each test ran. This notifications can be read by listening to the worker announcer: 
 
 ```
@@ -10,35 +10,36 @@ worker announcer
 	when: TestAnnouncement 
 	do: [ :ann | ann crTrace ].
 
-worker runSuite: myTestSuite
+worker runTest: myTestCase
 ```
 "
 Class {
-	#name : #RmRunTestSuite,
+	#name : #RmRunTestCase,
 	#superclass : #RmCommand,
 	#instVars : [
-		'suite'
+		'testCase'
 	],
 	#category : #'PharoRI-Commands'
 }
 
 { #category : #execution }
-RmRunTestSuite >> execute [
+RmRunTestCase >> execute [
 
 	^ RmRunnerExecutionEnvironment inWorkerDuring: [ 
-		self suite 
+		TestSuite new 
 			when: TestAnnouncement do: [ :ann | runner notify: ann ];
+			addTest: self testCase;
 			run ]
 ]
 
 { #category : #accessing }
-RmRunTestSuite >> suite [
+RmRunTestCase >> testCase [
 
-	^ suite
+	^ testCase
 ]
 
 { #category : #accessing }
-RmRunTestSuite >> suite: anObject [
+RmRunTestCase >> testCase: anObject [
 
-	suite := anObject
+	testCase := anObject
 ]

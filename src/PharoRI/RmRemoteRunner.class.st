@@ -15,6 +15,7 @@ Class {
 	#name : #RmRemoteRunner,
 	#superclass : #RmPeeToPeer,
 	#instVars : [
+		'id',
 		'remoteWorker',
 		'readChannel',
 		'writeChannel',
@@ -51,6 +52,14 @@ RmRemoteRunner class >> defaultArchetype [
 RmRemoteRunner class >> initialize [
 
 	SessionManager default registerUserClassNamed: self name
+]
+
+{ #category : #'instance creation' }
+RmRemoteRunner class >> newId: aString [
+
+	^ self new 
+		id: aString;
+		yourself
 ]
 
 { #category : #private }
@@ -175,6 +184,18 @@ RmRemoteRunner >> handleWarning: aWarning [
 
 	aWarning asBeaconSignal emit.
 	aWarning resume
+]
+
+{ #category : #accessing }
+RmRemoteRunner >> id [
+
+	^ id ifNil: [ id := UUID new asString ]
+]
+
+{ #category : #accessing }
+RmRemoteRunner >> id: anIdentifier [
+
+	id := anIdentifier
 ]
 
 { #category : #initialization }
@@ -435,6 +456,14 @@ RmRemoteRunner >> runSuite: suite [
 	^ self runCommand: (RmRunTestSuite new 
 		suite: suite;
 		yourself)
+]
+
+{ #category : #commands }
+RmRemoteRunner >> runTest: aTestCase [
+
+	^ self runCommand: (RmRunTestCase new 
+		testCase: aTestCase;
+		yourself) 
 ]
 
 { #category : #private }

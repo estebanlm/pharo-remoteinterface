@@ -32,13 +32,22 @@ RmRunnerExecutionEnvironment >> isWorker [
 { #category : #controlling }
 RmRunnerExecutionEnvironment >> runTestCase: aTestCase [
 
-	self isWorker ifTrue: [ ^ super runTestCase: aTestCase ]. 
-
-	aTestCase runCase
+	^ self isWorker 
+		ifTrue: [ super runTestCase: aTestCase ]
+		ifFalse: [ self runner runTest: aTestCase ]
 ]
 
 { #category : #controlling }
 RmRunnerExecutionEnvironment >> runTestsBy: aBlock [
 
 	aBlock value
+]
+
+{ #category : #private }
+RmRunnerExecutionEnvironment >> runner [
+
+	^ (RmRemoteRunner activeWorkers
+		detect: [ :each | each id = 'RunnerForTest' ]
+		ifNone: [ RmRemoteRunner newId: 'RunnerForTest' ])
+		ensureRunning
 ]
