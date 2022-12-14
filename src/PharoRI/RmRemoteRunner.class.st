@@ -394,7 +394,10 @@ RmRemoteRunner >> runCommand: aCommand [
 	sem wait.
 
 	aborted ifTrue: [ self error: 'Execution terminated.' ].	
-	error ifNotNil: [ error debug ].
+	error ifNotNil: [ 
+		RmRemoteError new 
+			remoteError: error;
+			signal ].
 	
 	^ result
 ]
@@ -406,7 +409,10 @@ RmRemoteRunner >> runCommand: aCommand onSuccess: aBlock [
 	self schedule: [ 
 		(self pushFutureFor: aCommand asPmiCommand)
 			onSuccess: aBlock;
-			onError: [ :e | e debug ];
+			onError: [ :e | 
+				RmRemoteError new 
+					remoteError: e;
+					signal ];
 			onAbort: [ ];
 			execute ]
 ]

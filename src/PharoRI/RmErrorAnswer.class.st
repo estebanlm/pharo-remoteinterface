@@ -1,3 +1,6 @@
+"
+An specialised answer to return an error (which will be fuelised)
+"
 Class {
 	#name : #RmErrorAnswer,
 	#superclass : #RmAnswer,

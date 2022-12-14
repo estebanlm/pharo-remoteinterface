@@ -1,3 +1,7 @@
+"
+A remote execution worker. 
+It has the job of start listeners (based on `GIOChannel`) and process commands from host image.
+"
 Class {
 	#name : #RmRemoteWorker,
 	#superclass : #RmPeeToPeer,

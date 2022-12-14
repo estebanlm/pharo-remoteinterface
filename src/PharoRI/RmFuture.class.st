@@ -112,7 +112,6 @@ RmFuture >> resolveAsError: anError [
 
 	self finishSuccess: false.
 	value := nil.
-
 	errorBlock ifNil: [ 
 		('Error received without handler: {1}' format: { anError }) crTrace.
 		^ self ].
