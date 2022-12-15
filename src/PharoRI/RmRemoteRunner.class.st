@@ -551,6 +551,8 @@ RmRemoteRunner >> stopSynchronizationListener [
 { #category : #'private - listeners' }
 RmRemoteRunner >> synchronizeChange: ann [
 
+	ann entry content isCodeChange ifFalse: [ ^ self ].
+	 
 	[ 'Synchronize entry: {1}' format: { ann entry } ] emit.
 	self 
 		runCommand: (RmReplay newEntry: ann entry)
