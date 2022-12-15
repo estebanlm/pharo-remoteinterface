@@ -2,7 +2,8 @@ Class {
 	#name : #RmRunnerExecutionEnvironment,
 	#superclass : #DefaultExecutionEnvironment,
 	#classVars : [
-		'InWorker'
+		'InWorker',
+		'RemoteRunner'
 	],
 	#category : #'PharoRI-Commands'
 }
@@ -46,8 +47,7 @@ RmRunnerExecutionEnvironment >> runTestsBy: aBlock [
 { #category : #private }
 RmRunnerExecutionEnvironment >> runner [
 
-	^ (RmRemoteRunner activeWorkers
-		detect: [ :each | each id = 'RunnerForTest' ]
-		ifNone: [ RmRemoteRunner newId: 'RunnerForTest' ])
-		ensureRunning
+	RemoteRunner ifNil: [
+		RemoteRunner := RmRemoteRunner newId: 'RunnerForTest' ].
+	^ RemoteRunner ensureRunning
 ]
