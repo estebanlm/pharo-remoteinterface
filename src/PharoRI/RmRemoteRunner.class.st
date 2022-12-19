@@ -28,7 +28,8 @@ Class {
 		'futures'
 	],
 	#classVars : [
-		'ActiveWorkers'
+		'ActiveWorkers',
+		'LogAnnouncer'
 	],
 	#pools : [
 		'GSpawnFlags'
@@ -52,6 +53,12 @@ RmRemoteRunner class >> defaultArchetype [
 RmRemoteRunner class >> initialize [
 
 	SessionManager default registerUserClassNamed: self name
+]
+
+{ #category : #accessing }
+RmRemoteRunner class >> logAnnouncer [
+
+	^ LogAnnouncer ifNil: [ LogAnnouncer := Announcer new ]
 ]
 
 { #category : #'instance creation' }
@@ -265,6 +272,21 @@ RmRemoteRunner >> launchWaitForAnswerListener [
 ]
 
 { #category : #'private - listeners' }
+RmRemoteRunner >> launchWaitForLogListener [
+
+	self isErrorListenerRunning ifTrue: [ ^ self ].
+
+	errorListener := self errorChannel 
+		newReadLineListener: ('error_{1}' format: { remoteWorker pid })
+		action: [ :line | 
+			self class logAnnouncer announce: (RmRemoteSignalAnnouncement new 
+				runner: self;
+				parseSignal: line;
+				yourself) ].
+	errorListener start
+]
+
+{ #category : #'private - listeners' }
 RmRemoteRunner >> launchWaitForLogListenerOn: aTranscript [
 
 	self isErrorListenerRunning ifTrue: [ ^ self ].
@@ -278,16 +300,16 @@ RmRemoteRunner >> launchWaitForLogListenerOn: aTranscript [
 { #category : #accessing }
 RmRemoteRunner >> listenToLog [
 
-	self listenToLogOn: Transcript
-]
-
-{ #category : #accessing }
-RmRemoteRunner >> listenToLogOn: aTranscript [
-
 	self isRunning 
 		ifFalse: [ self error: 'RemoteWorker not running' ].
 		
-	self launchWaitForLogListenerOn: aTranscript
+	self launchWaitForLogListener.
+	self runCommand: [ 
+		FileLogger new 
+			serializer: RmSTONSerializer new;
+			stream: Stdio stderr;
+			start.
+		true	]
 ]
 
 { #category : #commands }
@@ -317,6 +339,13 @@ RmRemoteRunner >> ping [
 	
 	
 	^ result
+]
+
+{ #category : #'private - listeners' }
+RmRemoteRunner >> printOn: stream [
+
+	super printOn: stream.
+	stream << '(' << self id << ')'
 ]
 
 { #category : #private }
@@ -551,6 +580,8 @@ RmRemoteRunner >> stopSynchronizationListener [
 { #category : #'private - listeners' }
 RmRemoteRunner >> synchronizeChange: ann [
 
+
+	self isRunning ifFalse: [ ^ self ].
 	ann entry content isCodeChange ifFalse: [ ^ self ].
 	 
 	[ 'Synchronize entry: {1}' format: { ann entry } ] emit.
