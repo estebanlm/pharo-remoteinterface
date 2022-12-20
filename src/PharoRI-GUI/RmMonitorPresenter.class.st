@@ -35,7 +35,7 @@ RmMonitorPresenter >> initializePresenter [
 
 	listPresenter := self newTable
 		beResizable;
-		addColumn: (SpStringTableColumn title: 'Worker' evaluated: #runnerId);
+		addColumn: ((SpStringTableColumn title: 'Worker' evaluated: #runnerId) width: 200);
 		addColumn: (SpStringTableColumn title: 'Log' evaluated: #line);
 		yourself
 ]
@@ -45,6 +45,7 @@ RmMonitorPresenter >> initializeWindow: aWindowPresenter [
 
 	aWindowPresenter 
 		title: 'Remote worker monitor';
+		initialExtent: 800@250;
 		whenOpenedDo: [ self subscribeToAnnouncements ];
 		whenClosedDo: [ self unsubscribeFromAnnouncers ]
 ]
