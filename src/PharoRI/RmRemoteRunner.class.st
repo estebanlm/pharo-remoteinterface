@@ -28,7 +28,7 @@ Class {
 		'futures'
 	],
 	#classVars : [
-		'ActiveWorkers',
+		'ActiveRunners',
 		'LogAnnouncer'
 	],
 	#pools : [
@@ -38,9 +38,9 @@ Class {
 }
 
 { #category : #accessing }
-RmRemoteRunner class >> activeWorkers [
+RmRemoteRunner class >> activeRunners [
 
-	^ ActiveWorkers
+	^ ActiveRunners
 ]
 
 { #category : #defaults }
@@ -70,19 +70,23 @@ RmRemoteRunner class >> newId: aString [
 ]
 
 { #category : #private }
-RmRemoteRunner class >> registerWorker: aWorker [
+RmRemoteRunner class >> registerWorker: aRunner [
 
-	ActiveWorkers ifNil: [ ActiveWorkers := WeakSet new ].
-	ActiveWorkers add: aWorker
+	ActiveRunners ifNil: [ ActiveRunners := WeakSet new ].
+	ActiveRunners add: aRunner.
+	
+	self logAnnouncer announce: (RmRemoteRunnerRegisteredAnnouncement new 
+		runner: aRunner;
+		yourself)
 ]
 
 { #category : #'system startup' }
 RmRemoteRunner class >> shutDown: quitting [
 
 	quitting ifFalse: [ ^ self ].
-	ActiveWorkers ifNotNil: [ 
-		ActiveWorkers do: [ :each | each terminate ].
-		ActiveWorkers := nil ]
+	ActiveRunners ifNotNil: [ 
+		ActiveRunners do: [ :each | each terminate ].
+		ActiveRunners := nil ]
 ]
 
 { #category : #private }
@@ -341,7 +345,7 @@ RmRemoteRunner >> ping [
 	^ result
 ]
 
-{ #category : #'private - listeners' }
+{ #category : #printing }
 RmRemoteRunner >> printOn: stream [
 
 	super printOn: stream.
@@ -528,14 +532,15 @@ RmRemoteRunner >> sourceChangesAnnouncer [
 RmRemoteRunner >> spawn [ 
 
 	remoteWorker := self archetype spawn.
-	self archetype workerStartedOn: self.
 	
 	writeChannel := remoteWorker inChannel.
 	readChannel := remoteWorker outChannel.
 	errorChannel := remoteWorker errChannel.
 	
 	self launchWaitForAnswerListener.
-	self registerWorkerForShutdown
+	self registerWorkerForShutdown.
+	
+	self archetype workerStartedOn: self
 ]
 
 { #category : #'private - listeners' }
@@ -577,7 +582,7 @@ RmRemoteRunner >> stopSynchronizationListener [
 	self sourceChangesAnnouncer unsubscribe: self
 ]
 
-{ #category : #'private - listeners' }
+{ #category : #private }
 RmRemoteRunner >> synchronizeChange: ann [
 
 
@@ -594,11 +599,16 @@ RmRemoteRunner >> synchronizeChange: ann [
 RmRemoteRunner >> terminate [
 
 	"Stop worker"
-	TFProcessLocalWorker useSameThreadDuring: [ remoteWorker close ].
+	remoteWorker ifNotNil: [ 
+		TFProcessLocalWorker useSameThreadDuring: [ remoteWorker close ] ].
 	"stop listeners"
 	self stopAllListeners.
 	"cleaning just to ensure everything is collected"
-	self cleanUp
+	self cleanUp.
+	
+	self class logAnnouncer announce: (RmRemoteRunnerTerminatedAnnouncement new 
+		runner: self;
+		yourself)
 ]
 
 { #category : #private }

@@ -1,8 +1,7 @@
 Class {
 	#name : #RmRemoteSignalAnnouncement,
-	#superclass : #Announcement,
+	#superclass : #RmRemoteRunnerAnnouncement,
 	#instVars : [
-		'runner',
 		'signal'
 	],
 	#category : #'PharoRI-Runner'
@@ -23,18 +22,6 @@ RmRemoteSignalAnnouncement >> parseSignal: aString [
 			StringSignal new
 				message: aString;
 				yourself ]
-]
-
-{ #category : #accessing }
-RmRemoteSignalAnnouncement >> runner [
-
-	^ runner
-]
-
-{ #category : #accessing }
-RmRemoteSignalAnnouncement >> runner: anObject [
-
-	runner := anObject
 ]
 
 { #category : #accessing }

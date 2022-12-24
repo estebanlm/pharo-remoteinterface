@@ -24,6 +24,7 @@ Class {
 
 { #category : #execution }
 RmRunTestCase >> execute [
+	"return test result"
 
 	^ RmRunnerExecutionEnvironment inWorkerDuring: [ 
 		TestSuite new 

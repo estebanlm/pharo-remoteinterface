@@ -5,7 +5,7 @@ Class {
 		'InWorker',
 		'RemoteRunner'
 	],
-	#category : #'PharoRI-Commands'
+	#category : #'PharoRI-Runner'
 }
 
 { #category : #accessor }
@@ -22,6 +22,19 @@ RmRunnerExecutionEnvironment class >> inWorkerDuring: aBlock [
 RmRunnerExecutionEnvironment class >> isWorker [
 
 	^ InWorker ifNil: [ InWorker := false ]
+]
+
+{ #category : #private }
+RmRunnerExecutionEnvironment class >> runner [
+
+	(RemoteRunner isNil or: [ RemoteRunner isRunning not ]) ifTrue: [
+		RemoteRunner ifNotNil: [ RemoteRunner terminate ].   
+		RemoteRunner := RmRemoteRunner newId: 'RunnerForTest'.
+		RemoteRunner spawn.
+		RemoteRunner listenToLog.
+		RemoteRunner runCommand: [ GEngine ensureRunning. true ] ].
+
+	^ RemoteRunner
 ]
 
 { #category : #testing }
@@ -47,7 +60,5 @@ RmRunnerExecutionEnvironment >> runTestsBy: aBlock [
 { #category : #private }
 RmRunnerExecutionEnvironment >> runner [
 
-	RemoteRunner ifNil: [
-		RemoteRunner := RmRemoteRunner newId: 'RunnerForTest' ].
-	^ RemoteRunner ensureRunning
+	^ self class runner
 ]

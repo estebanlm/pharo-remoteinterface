@@ -17,5 +17,12 @@ RmThisImageArchetype >> imageName [
 { #category : #starting }
 RmThisImageArchetype >> workerStartedOn: aRunner [
 
+	aRunner runCommand: [ 
+		SystemAnnouncer uniqueInstance suspendAllWhile: [ 
+			EpMonitor current disable.
+			NoPharoFilesOpener install.
+			SourceFiles close ].
+		true ].
+
 	aRunner launchSynchronizationListener
 ]

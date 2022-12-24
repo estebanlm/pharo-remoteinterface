@@ -34,9 +34,11 @@ RmReplay >> entry: anObject [
 RmReplay >> execute [
 
 	[ 'Replying: {1}' format: { self entry } ] emit.
-	EpMonitor disableDuring: [ 
-		SystemAnnouncer uniqueInstance suspendAllWhile: [
+	SystemAnnouncer uniqueInstance suspendAllWhile: [
+		EpMonitor disableDuring: [ 
 			self entry content applyCodeChange.	
 		] 
-	]
+	].
+
+	^ true
 ]

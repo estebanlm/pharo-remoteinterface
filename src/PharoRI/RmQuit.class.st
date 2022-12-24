@@ -10,5 +10,6 @@ Class {
 { #category : #execution }
 RmQuit >> execute [
 
-	runner stopFromCommand: self
+	runner stopFromCommand: self.
+	^ true
 ]
