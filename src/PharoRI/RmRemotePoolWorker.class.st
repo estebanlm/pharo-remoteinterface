@@ -3,8 +3,8 @@ Class {
 	#superclass : #RmRemoteWorker,
 	#instVars : [
 		'scheduler',
-		'mutex',
-		'poolSize'
+		'poolSize',
+		'mutex'
 	],
 	#category : #'PharoRI-Worker'
 }
@@ -72,6 +72,6 @@ RmRemotePoolWorker >> stopScheduler [
 { #category : #writing }
 RmRemotePoolWorker >> writeAnswer: aType object: anObject [
 
-	^ mutex critical: [ 
+	mutex critical: [
 		super writeAnswer: aType object: anObject ]
 ]

@@ -21,7 +21,8 @@ RmRunnerMonitorPresenter >> allRunnerModels [
 
 	^ runners ifNil: [ 
 		runners := { RmAllRunnersModel new }, 
-			((RmRemoteRunner activeRunners ifNil: [ #() ])
+			(((RmRemoteRunner activeRunners ifNil: [ #() ])
+				reject: [ :each | each isNil ])
 				collect: [ :each | RmRunnerModel on: each ]
 				as: Array) ]
 ]

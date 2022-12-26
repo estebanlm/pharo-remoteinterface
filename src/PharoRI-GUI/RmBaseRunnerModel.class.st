@@ -43,3 +43,9 @@ RmBaseRunnerModel >> maybeAdd: anAnnouncement [
 
 	self subclassResponsibility
 ]
+
+{ #category : #removing }
+RmBaseRunnerModel >> removeAll [
+	
+	announcements removeAll
+]

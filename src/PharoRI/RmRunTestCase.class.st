@@ -40,7 +40,7 @@ RmRunTestCase >> testCase [
 ]
 
 { #category : #accessing }
-RmRunTestCase >> testCase: anObject [
+RmRunTestCase >> testCase: aTestCase [
 
-	testCase := anObject
+	testCase := aTestCase
 ]

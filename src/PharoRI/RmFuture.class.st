@@ -32,7 +32,7 @@ RmFuture >> abort [
 { #category : #execution }
 RmFuture >> execute [
 
-	worker sendCommand: command
+	worker sendCommand: command	
 ]
 
 { #category : #private }

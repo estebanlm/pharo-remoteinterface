@@ -8,7 +8,6 @@ TFProcessLocalWorker class >> use: aWorker during: aBlock [
 	self worker: aWorker.
 	^ aBlock ensure: [ 
 		self worker: oldWorker ]
-	
 ]
 
 { #category : #'*PharoRI' }

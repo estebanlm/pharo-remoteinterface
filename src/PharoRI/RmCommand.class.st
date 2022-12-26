@@ -33,12 +33,7 @@ RmCommand >> execute [
 RmCommand >> executeOn: aRunner [
 
 	runner := aRunner.
-	"I use my own execution environment because the TestExecutionEnvironment controls 
-	 created processes and kills them, and we can screw all the runner environment 
-	 (depending on processes like the gtk run loop and that, that can be created while 
-	 running a test command)"
-	RmRunnerExecutionEnvironment new 
-		beActiveDuring: [ ^ self execute ]
+	^ self execute
 ]
 
 { #category : #accessing }

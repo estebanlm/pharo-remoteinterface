@@ -39,7 +39,7 @@ RmRunTestSuite >> suite [
 ]
 
 { #category : #accessing }
-RmRunTestSuite >> suite: anObject [
+RmRunTestSuite >> suite: aTestSuite [
 
-	suite := anObject
+	suite := aTestSuite
 ]

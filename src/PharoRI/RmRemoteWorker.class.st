@@ -194,8 +194,9 @@ RmRemoteWorker >> writeAnswer: aType object: anObject [
 		self stdout 
 			write: aType;
 			writeLine: line;
-			flush.
-		self log: [ 'Sent: {1}{2}' format: {  aType. line } ] ]
+			flush ].
+
+	self log: [ 'Sent: {1}{2}' format: {  aType. line } ]
 ]
 
 { #category : #private }

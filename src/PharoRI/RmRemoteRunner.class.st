@@ -181,7 +181,6 @@ RmRemoteRunner >> handleError: anError [
 
 { #category : #private }
 RmRemoteRunner >> handleLine: line [
-
 	[ self basicHandleLine: line ]
 	on: Error, Warning
 	fork: [ :e |
@@ -435,7 +434,7 @@ RmRemoteRunner >> runCommand: aCommand [
 	aborted := false.
 	self schedule: [
 		(self pushFutureFor: aCommand asPmiCommand)
-			onSuccess: [ :remoteAnswer | 
+			onSuccess: [ :remoteAnswer |
 				result := remoteAnswer.
 				sem signal ];
 			onError: [ :remoteError | 

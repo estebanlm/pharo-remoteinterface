@@ -1,9 +1,12 @@
 Class {
 	#name : #RmRunnerExecutionEnvironment,
 	#superclass : #DefaultExecutionEnvironment,
+	#instVars : [
+		'runner',
+		'runnerActivationAction'
+	],
 	#classVars : [
-		'InWorker',
-		'RemoteRunner'
+		'InWorker'
 	],
 	#category : #'PharoRI-Runner'
 }
@@ -25,22 +28,29 @@ RmRunnerExecutionEnvironment class >> isWorker [
 ]
 
 { #category : #private }
-RmRunnerExecutionEnvironment class >> runner [
+RmRunnerExecutionEnvironment >> activateRunner [
 
-	(RemoteRunner isNil or: [ RemoteRunner isRunning not ]) ifTrue: [
-		RemoteRunner ifNotNil: [ RemoteRunner terminate ].   
-		RemoteRunner := RmRemoteRunner newId: 'RunnerForTest'.
-		RemoteRunner spawn.
-		RemoteRunner listenToLog.
-		RemoteRunner runCommand: [ GEngine ensureRunning. true ] ].
+	runner := RmRemoteRunner new.
+	runner spawn.
+	runner listenToLog.
+	runnerActivationAction 
+		ifNotNil: [ runnerActivationAction value: runner ].
 
-	^ RemoteRunner
+	^ runner
 ]
 
 { #category : #testing }
 RmRunnerExecutionEnvironment >> isWorker [
 
 	^ self class isWorker
+]
+
+{ #category : #accessing }
+RmRunnerExecutionEnvironment >> onRunnerActivated: aBlock [
+	"Define a block to be executed when the runner is initialized (for example to ensure some
+	 initialization in the worker)"
+
+	runnerActivationAction := aBlock
 ]
 
 { #category : #controlling }
@@ -51,14 +61,10 @@ RmRunnerExecutionEnvironment >> runTestCase: aTestCase [
 		ifFalse: [ self runner runTest: aTestCase ]
 ]
 
-{ #category : #controlling }
-RmRunnerExecutionEnvironment >> runTestsBy: aBlock [
-
-	aBlock value
-]
-
 { #category : #private }
 RmRunnerExecutionEnvironment >> runner [
 
-	^ self class runner
+	(runner isNil or: [ runner isRunning not ]) 
+		ifTrue: [ runner := self activateRunner ].
+	^ runner
 ]
