@@ -13,7 +13,7 @@ BaselineOfPharoRI >> baseline: spec [
 
 		spec 
 			package: 'PharoRI' with: [ spec requires: #('Glib') ]; 
-			package: 'PharoRI-DrGeo' with: [ spec requires: #('PharoRI') ]; 
+			package: 'PharoRI-DrTests' with: [ spec requires: #('PharoRI') ]; 
 			package: 'PharoRI-Tests' with: [ spec requires: #('PharoRI') ];
 			package: 'PharoRI-GUI' with: [ spec requires: #('PharoRI') ].
 
