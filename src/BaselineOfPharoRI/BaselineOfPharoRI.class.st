@@ -6,6 +6,7 @@ Class {
 
 { #category : #baselines }
 BaselineOfPharoRI >> baseline: spec [
+	<baseline>
 
 	spec for: #common do: [ 
 		self glib: spec.
