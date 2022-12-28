@@ -72,7 +72,7 @@ RmRemoteRunner class >> newId: aString [
 { #category : #private }
 RmRemoteRunner class >> registerWorker: aRunner [
 
-	ActiveRunners ifNil: [ ActiveRunners := WeakSet new ].
+	ActiveRunners ifNil: [ ActiveRunners := WeakRegistry new ].
 	ActiveRunners add: aRunner.
 	
 	self logAnnouncer announce: (RmRemoteRunnerRegisteredAnnouncement new 
@@ -156,6 +156,12 @@ RmRemoteRunner >> evaluate: aBlock [
 	^ self runCommand: aBlock asPmiCommand
 ]
 
+{ #category : #finalization }
+RmRemoteRunner >> executor [
+
+	^ RmRemoteRunnerFinalizer for: self
+]
+
 { #category : #starting }
 RmRemoteRunner >> forceTerminate [
 
@@ -181,6 +187,7 @@ RmRemoteRunner >> handleError: anError [
 
 { #category : #private }
 RmRemoteRunner >> handleLine: line [
+
 	[ self basicHandleLine: line ]
 	on: Error, Warning
 	fork: [ :e |
@@ -266,7 +273,8 @@ RmRemoteRunner >> launchWaitForAnswerListener [
 
 	readListener := self readChannel 
 		newReadLineListener: ('read_{1}' format: { remoteWorker pid })
-		action: [ :line | self handleLine: line ].
+		receiver: self
+		selector: #handleLine:.
 	readListener announcer 
 		when: GIOChannelTerminatedAnnouncement
 		send: #terminatedWithStatus:
@@ -281,22 +289,8 @@ RmRemoteRunner >> launchWaitForLogListener [
 
 	errorListener := self errorChannel 
 		newReadLineListener: ('error_{1}' format: { remoteWorker pid })
-		action: [ :line | 
-			self class logAnnouncer announce: (RmRemoteSignalAnnouncement new 
-				runner: self;
-				parseSignal: line;
-				yourself) ].
-	errorListener start
-]
-
-{ #category : #'private - listeners' }
-RmRemoteRunner >> launchWaitForLogListenerOn: aTranscript [
-
-	self isErrorListenerRunning ifTrue: [ ^ self ].
-
-	errorListener := self errorChannel 
-		newReadLineListener: ('error_{1}' format: { remoteWorker pid })
-		action: [ :line | aTranscript show: line trimmed; cr ].
+		receiver: self
+		selector: #logWorkerSignal:.
 	errorListener start
 ]
 
@@ -313,6 +307,15 @@ RmRemoteRunner >> listenToLog [
 			stream: Stdio stderr;
 			start.
 		true	]
+]
+
+{ #category : #private }
+RmRemoteRunner >> logWorkerSignal: line [
+
+	self class logAnnouncer announce: (RmRemoteSignalAnnouncement new 
+		runner: self;
+		parseSignal: line;
+		yourself)
 ]
 
 { #category : #commands }

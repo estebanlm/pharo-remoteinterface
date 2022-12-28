@@ -85,7 +85,8 @@ RmRemoteWorker >> launchReadListener [
 
 	readListener := self stdin 
 		newReadLineListener: 'runner_read' 
-		action: [ :line | self handleLine: line ].
+		receiver: self 
+		selector: #handleLine:.
 	readListener start
 ]
 
