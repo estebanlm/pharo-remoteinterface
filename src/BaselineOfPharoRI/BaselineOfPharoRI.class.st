@@ -9,19 +9,19 @@ BaselineOfPharoRI >> baseline: spec [
 
 	spec for: #common do: [ 
 		self glib: spec.
-		
+
 		spec 
-			package: 'PharoRI'; 
-			package: 'PharoRI-DrGeo'; 
-			package: 'PharoRI-Tests'.
-			
-			
-		spec 
+			package: 'PharoRI' with: [ spec requires: #('Glib') ]; 
+			package: 'PharoRI-DrGeo' with: [ spec requires: #('PharoRI') ]; 
+			package: 'PharoRI-Tests' with: [ spec requires: #('PharoRI') ];
+			package: 'PharoRI-GUI' with: [ spec requires: #('PharoRI') ].
+
+		spec
 			group: 'default' with: #('all'); 
-			group: 'core' with: #('PharoRI'); 
-			group: 'tests' with: #('core' 'PharoRI-Tests'); 
-			group: 'all' with: #('core' 'tests' 'PharoRI-DrGeo').
-	]
+			group: 'core' with: #('PharoRI');
+			group: 'gui' with: #('PharoRI' 'PharoRI-GUI');
+			group: 'tests' with: #('core' 'PharoRI-Tests');
+			group: 'all' with: #('core' 'gui' 'tests' 'PharoRI-DrGeo') ]
 ]
 
 { #category : #'external projects' }
