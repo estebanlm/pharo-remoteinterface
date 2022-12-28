@@ -22,7 +22,7 @@ BaselineOfPharoRI >> baseline: spec [
 			group: 'core' with: #('PharoRI');
 			group: 'gui' with: #('PharoRI' 'PharoRI-GUI');
 			group: 'tests' with: #('core' 'PharoRI-Tests');
-			group: 'all' with: #('core' 'gui' 'tests' 'PharoRI-DrGeo') ]
+			group: 'all' with: #('core' 'gui' 'tests' 'PharoRI-DrTests') ]
 ]
 
 { #category : #'external projects' }
