@@ -40,6 +40,6 @@ BaselineOfPharoRI >> glib: spec [
 
 	spec baseline: 'Glib' with: [ 
 		spec 
-			repository: 'github://pharo-spec/gtk-bindings';
+			repository: 'github://pharo-spec/gtk-bindings:gtk4/src';
 			loads: 'GIO-standalone' ]
 ]
