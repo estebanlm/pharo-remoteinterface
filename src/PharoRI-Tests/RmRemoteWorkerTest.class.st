@@ -50,7 +50,7 @@ RmRemoteWorkerTest >> testNotifyNotAnAnnouncement [
 	runner notify: 42 asPmiNotification.
 	self 
 		assert: runner stdout contents trimmed  
-		equals: '-n:PmiRemoteNotificationAnnouncement{#value:42}'.
+		equals: '-n:RmRemoteNotificationAnnouncement{#value:42}'.
 
 	notified := false.		
 	worker := RmRemoteRunnerMock new. 
