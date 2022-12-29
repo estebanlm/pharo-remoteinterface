@@ -1,10 +1,10 @@
 # Pharo Remote Interface
 
-The Pharo Remote Interface (RI) is a very simple framework to spawn and comunicate pharo processes (images), using the standard IO files and STON [Smalltalk Object Notation](https://github.com/svenvc/ston) as comunicating pipes.
+The Pharo Remote Interface (RI) is a very simple framework to spawn and comunicate pharo processes (images), using the standard IO files and STON ([Smalltalk Object Notation](https://github.com/svenvc/ston)) as comunicating pipes.
 
 [![CI](https://github.com/estebanlm/pharo-remoteinterface/actions/workflows/runTests.yml/badge.svg)](https://github.com/estebanlm/pharo-remoteinterface/actions/workflows/runTests.yml)
 
-The RI package uses the GIO functionality present in Glib [bindings can be found here](https://github.com/pharo-spec/gtk-bindings) to spawn and communicate process.
+The RI package uses the GIO functionality present in Glib ([bindings can be found here](https://github.com/pharo-spec/gtk-bindings)) to spawn and communicate process.
 
 ## Install
 
