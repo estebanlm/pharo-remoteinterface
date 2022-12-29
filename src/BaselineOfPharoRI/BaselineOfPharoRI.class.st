@@ -32,12 +32,14 @@ BaselineOfPharoRI >> beacon: spec [
 	spec baseline: 'Beacon' with: [ 
 		spec 
 			repository: 'github://pharo-project/pharo-beacon/repository';
-			loads: 'Beacon-ExtraSignals' ]
+			loads: #('Beacon-ExtraSignals' 'Beacon-SerializingLoggers') ]
 ]
 
 { #category : #'external projects' }
 BaselineOfPharoRI >> glib: spec [
 
 	spec baseline: 'Glib' with: [ 
-		spec repository: 'github://pharo-spec/gtk-bindings' ]
+		spec 
+			repository: 'github://pharo-spec/gtk-bindings';
+			loads: 'GIO' ]
 ]
