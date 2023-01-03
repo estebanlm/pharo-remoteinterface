@@ -30,13 +30,27 @@ RmRunnerExecutionEnvironment class >> isWorker [
 { #category : #private }
 RmRunnerExecutionEnvironment >> activateRunner [
 
-	runner := RmRemoteRunner new.
+	runner isRunning ifTrue: [ ^ self ].
+
 	runner spawn.
 	runner listenToLog.
 	runnerActivationAction 
-		ifNotNil: [ runnerActivationAction value: runner ].
+		ifNotNil: [ runnerActivationAction value: runner ]
+]
 
+{ #category : #private }
+RmRunnerExecutionEnvironment >> ensureRunner [
+
+	self activateRunner.
 	^ runner
+]
+
+{ #category : #initialization }
+RmRunnerExecutionEnvironment >> initialize [
+
+	super initialize.
+	runner := RmRemoteRunner new.
+	runner archetype interactive
 ]
 
 { #category : #testing }
@@ -58,13 +72,17 @@ RmRunnerExecutionEnvironment >> runTestCase: aTestCase [
 
 	^ self isWorker 
 		ifTrue: [ super runTestCase: aTestCase ]
-		ifFalse: [ self runner runTest: aTestCase ]
+		ifFalse: [ self ensureRunner runTest: aTestCase ]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RmRunnerExecutionEnvironment >> runner [
 
-	(runner isNil or: [ runner isRunning not ]) 
-		ifTrue: [ runner := self activateRunner ].
 	^ runner
+]
+
+{ #category : #accessing }
+RmRunnerExecutionEnvironment >> runnerId: anId [
+
+	runner id: anId
 ]
