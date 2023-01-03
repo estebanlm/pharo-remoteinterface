@@ -4,7 +4,7 @@ It has the job of start listeners (based on `GIOChannel`) and process commands f
 "
 Class {
 	#name : #RmRemoteWorker,
-	#superclass : #RmPeeToPeer,
+	#superclass : #RmPeerToPeer,
 	#classTraits : 'RmTLogger classTrait',
 	#instVars : [
 		'running',

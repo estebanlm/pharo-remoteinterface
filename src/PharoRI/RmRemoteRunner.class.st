@@ -13,7 +13,7 @@ worker spawn
 "
 Class {
 	#name : #RmRemoteRunner,
-	#superclass : #RmPeeToPeer,
+	#superclass : #RmPeerToPeer,
 	#instVars : [
 		'id',
 		'remoteWorker',

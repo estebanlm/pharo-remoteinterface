@@ -2,7 +2,7 @@
 An abstract base for runners and workers.
 "
 Class {
-	#name : #RmPeeToPeer,
+	#name : #RmPeerToPeer,
 	#superclass : #Object,
 	#traits : 'RmTLogger',
 	#classTraits : 'RmTLogger classTrait',
@@ -13,49 +13,49 @@ Class {
 }
 
 { #category : #'private - testing' }
-RmPeeToPeer >> isCommand: line [
+RmPeerToPeer >> isCommand: line [
 
 	^ line beginsWith: COMMAND
 ]
 
 { #category : #'private - testing' }
-RmPeeToPeer >> isError: line [
+RmPeerToPeer >> isError: line [
 
 	^ line beginsWith: ERROR
 ]
 
 { #category : #'private - testing' }
-RmPeeToPeer >> isNotify: line [
+RmPeerToPeer >> isNotify: line [
 
 	^ line beginsWith: NOTIFY
 ]
 
 { #category : #'private - testing' }
-RmPeeToPeer >> isResult: line [
+RmPeerToPeer >> isResult: line [
 
 	^ line beginsWith: RESULT
 ]
 
 { #category : #'private - serializing' }
-RmPeeToPeer >> materialize: aString [
+RmPeerToPeer >> materialize: aString [
 
 	^ STON fromString: aString
 ]
 
 { #category : #'private - serializing' }
-RmPeeToPeer >> materializeLine: aLine [
+RmPeerToPeer >> materializeLine: aLine [
 
 	^ self materialize: (self removeMarker: aLine)
 ]
 
 { #category : #private }
-RmPeeToPeer >> removeMarker: aLine [
+RmPeerToPeer >> removeMarker: aLine [
 
 	^ aLine allButFirst: MARKER_SIZE
 ]
 
 { #category : #'private - serializing' }
-RmPeeToPeer >> serialize: anObject [
+RmPeerToPeer >> serialize: anObject [
 	
 	^ STON toString: anObject
 ]
