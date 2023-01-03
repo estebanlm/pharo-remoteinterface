@@ -6,7 +6,8 @@ Class {
 	#instVars : [
 		'clearButton',
 		'detailText',
-		'announcementList'
+		'announcementList',
+		'inspectButton'
 	],
 	#category : #'PharoRI-GUI'
 }
@@ -41,6 +42,8 @@ RmRunnerPresenter >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: (SpBoxLayout newHorizontal
 				borderWidth: 3;
+				spacing: 3;
+				addLast: inspectButton expand: false;
 				addLast: clearButton expand: false;
 				yourself) 
 			expand: false;
@@ -51,16 +54,29 @@ RmRunnerPresenter >> defaultLayout [
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : #actions }
 RmRunnerPresenter >> doClear [
 
 	self model removeAll.
 	self updatePresenter
 ]
 
+{ #category : #actions }
+RmRunnerPresenter >> doInspect [
+	| line object |
+
+	line := announcementList selectedItem signal target.
+	object := RmPeerToPeer basicNew materializeLine: (line copyAfter: Character space).
+	self application tools inspector inspect: object
+]
+
 { #category : #initialization }
 RmRunnerPresenter >> initializePresenters [
 
+	inspectButton := self newButton
+		label: 'Inspect';
+		action: [ self doInspect ];
+		yourself.
 	clearButton := self newButton
 		label: 'Clear';
 		action: [ self doClear ];
