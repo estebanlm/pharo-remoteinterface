@@ -38,7 +38,7 @@ runner
 	onSuccess: [ :result | result inspect ]
 ```
 
-**IMPORTANT: The blocks passed to the spawned image need to be "clean blocks", for obvious reasons they can't have references to `self`, `super` or variables.**
+**IMPORTANT:** The blocks passed to the spawned image need to be "clean blocks", for obvious reasons they can't have references to `self`, `super` or local variables.  
 
 ## Monitoring the remote image
 
