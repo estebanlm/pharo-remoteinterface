@@ -4,13 +4,17 @@ An abstract base for runners and workers.
 Class {
 	#name : #RmPeerToPeer,
 	#superclass : #Object,
-	#traits : 'RmTLogger',
-	#classTraits : 'RmTLogger classTrait',
 	#pools : [
 		'RmConstants'
 	],
 	#category : #'PharoRI-Base'
 }
+
+{ #category : #serializing }
+RmPeerToPeer class >> materializeLine: aString [
+
+	^ self basicNew materializeLine: aString
+]
 
 { #category : #'private - testing' }
 RmPeerToPeer >> isCommand: line [

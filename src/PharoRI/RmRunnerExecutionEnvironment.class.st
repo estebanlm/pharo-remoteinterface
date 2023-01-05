@@ -32,8 +32,10 @@ RmRunnerExecutionEnvironment >> activateRunner [
 
 	runner isRunning ifTrue: [ ^ self ].
 
+	"runner archetype interactive."
 	runner spawn.
-	runner listenToLog.
+	"runner listenToLog."
+	runner listenToFile.
 	runnerActivationAction 
 		ifNotNil: [ runnerActivationAction value: runner ]
 ]
@@ -50,7 +52,7 @@ RmRunnerExecutionEnvironment >> initialize [
 
 	super initialize.
 	runner := RmRemoteRunner new.
-	runner archetype interactive
+	runner archetype poolSize: 10
 ]
 
 { #category : #testing }
@@ -67,12 +69,22 @@ RmRunnerExecutionEnvironment >> onRunnerActivated: aBlock [
 	runnerActivationAction := aBlock
 ]
 
+{ #category : #private }
+RmRunnerExecutionEnvironment >> remoteRunTestCase: aTestCase [
+	| result |
+
+	result := self ensureRunner runTest: aTestCase.
+	result errors ifNotEmpty: [ :errors | TestResult error signal ].
+	result failures ifNotEmpty: [ :failures | TestResult failure signal ].
+	result skipped ifNotEmpty: [ :skipped | TestResult skip signal ]
+]
+
 { #category : #controlling }
 RmRunnerExecutionEnvironment >> runTestCase: aTestCase [
 
-	^ self isWorker 
+	self isWorker 
 		ifTrue: [ super runTestCase: aTestCase ]
-		ifFalse: [ self ensureRunner runTest: aTestCase ]
+		ifFalse: [ self remoteRunTestCase: aTestCase ]
 ]
 
 { #category : #accessing }

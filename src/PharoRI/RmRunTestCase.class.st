@@ -26,7 +26,7 @@ Class {
 RmRunTestCase >> execute [
 	"return test result"
 
-	^ RmRunnerExecutionEnvironment inWorkerDuring: [ 
+	^ RmRunnerExecutionEnvironment inWorkerDuring: [
 		TestSuite new 
 			when: TestAnnouncement do: [ :ann | runner notify: ann ];
 			addTest: self testCase;

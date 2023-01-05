@@ -295,6 +295,21 @@ RmRemoteRunner >> launchWaitForLogListener [
 ]
 
 { #category : #accessing }
+RmRemoteRunner >> listenToFile [
+
+	self isRunning 
+		ifFalse: [ self error: 'RemoteWorker not running' ].
+		
+	self runCommand: [ 
+		FileLogger new 
+			filename: 'worker.log';
+			append: true;
+			serializer: RmSTONSerializer new;
+			start.
+		true	]
+]
+
+{ #category : #accessing }
 RmRemoteRunner >> listenToLog [
 
 	self isRunning 
@@ -340,9 +355,7 @@ RmRemoteRunner >> ping [
 		sem signal ] 
 	fork.
 
-	
 	sem wait.
-	
 	
 	^ result
 ]
@@ -361,7 +374,7 @@ RmRemoteRunner >> pushError: anAnswer [
 	 We need yo process it"
 	anAnswer id ifNil: [ 
 		anAnswer value debug ].
-	
+	'ERROR' printToStdout.
 	(self removeFutureAt: anAnswer id) resolveAsError: anAnswer value.
 	self announce: (RmRemoteErrorAnnouncement newAnswer: anAnswer)
 ]
@@ -451,9 +464,7 @@ RmRemoteRunner >> runCommand: aCommand [
 
 	aborted ifTrue: [ self error: 'Execution terminated.' ].	
 	error ifNotNil: [ 
-		RmRemoteError new 
-			remoteError: error;
-			signal ].
+		RmRemoteError signalForException: error ].
 	
 	^ result
 ]
@@ -465,10 +476,7 @@ RmRemoteRunner >> runCommand: aCommand onSuccess: aBlock [
 	self schedule: [ 
 		(self pushFutureFor: aCommand asPmiCommand)
 			onSuccess: aBlock;
-			onError: [ :e | 
-				RmRemoteError new 
-					remoteError: e;
-					signal ];
+			onError: [ :e | RmRemoteError signalForException: e ];
 			onAbort: [ ];
 			execute ]
 ]

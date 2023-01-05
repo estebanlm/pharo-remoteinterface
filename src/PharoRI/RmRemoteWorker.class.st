@@ -5,7 +5,6 @@ It has the job of start listeners (based on `GIOChannel`) and process commands f
 Class {
 	#name : #RmRemoteWorker,
 	#superclass : #RmPeerToPeer,
-	#classTraits : 'RmTLogger classTrait',
 	#instVars : [
 		'running',
 		'stdin',
@@ -52,7 +51,7 @@ RmRemoteWorker >> handleLine: aString [
 
 	aString isEmptyOrNil ifTrue: [ ^ self ].
 	
-	self log: [ 'Received: ', aString ].
+	[ 'Received: ', aString ] emit.
 	[ self basicHandleLine: aString ]
 	on: Exception
 	do: [ :e | self writeError: (e freezeUpTo: thisContext home) ]
@@ -90,12 +89,6 @@ RmRemoteWorker >> launchReadListener [
 	readListener start
 ]
 
-{ #category : #logging }
-RmRemoteWorker >> log: aValuable [
-
-	aValuable value asBeaconSignal emit
-]
-
 { #category : #'private - factory' }
 RmRemoteWorker >> newStdin [
 
@@ -123,7 +116,7 @@ RmRemoteWorker >> processCommand: aString [
 		self 
 			writeResult: (command executeOn: self)
 			ofCommand: command ]
-	on: Exception 
+	on: Exception
 	do: [ :e | 
 		self 
 			writeError: (e freezeUpTo: thisContext home) 
@@ -145,7 +138,7 @@ RmRemoteWorker >> start [
 		self stdin.
 		self stdout.
 		self launchReadListener.
-		self log: 'Remote runner started' ]
+		'Remote runner started' emit ]
 ]
 
 { #category : #private }
@@ -183,7 +176,7 @@ RmRemoteWorker >> stopFromCommand: aCommand [
 		self stdout close.
 		stdin := nil.
 		stdout := nil.
-		self log: 'Runner stopped' ].
+		'Runner stopped' emit ].
 ]
 
 { #category : #private }
@@ -197,7 +190,7 @@ RmRemoteWorker >> writeAnswer: aType object: anObject [
 			writeLine: line;
 			flush ].
 
-	self log: [ 'Sent: {1}{2}' format: {  aType. line } ]
+	[ 'Sent: {1}{2}' format: {  aType. line } ] emit
 ]
 
 { #category : #private }

@@ -5,19 +5,33 @@ Class {
 	#name : #RmRemoteError,
 	#superclass : #Error,
 	#instVars : [
-		'remoteError'
+		'exception'
 	],
 	#category : #'PharoRI-Base'
 }
 
-{ #category : #accessing }
-RmRemoteError >> remoteError [
+{ #category : #signalling }
+RmRemoteError class >> signalForException: anError [
 
-	^ remoteError
+	^ self new
+		exception: anError;
+		signal
 ]
 
 { #category : #accessing }
-RmRemoteError >> remoteError: anObject [
+RmRemoteError >> defaultAction [
 
-	remoteError := anObject
+	self exception debug
+]
+
+{ #category : #accessing }
+RmRemoteError >> exception [
+
+	^ exception
+]
+
+{ #category : #accessing }
+RmRemoteError >> exception: anObject [
+
+	exception := anObject
 ]
