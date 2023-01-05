@@ -66,7 +66,7 @@ RmRunnerPresenter >> doInspect [
 	| line object |
 
 	line := announcementList selectedItem signal target.
-	object := RmPeerToPeer basicNew materializeLine: (line copyAfter: Character space).
+	object := RmPeerToPeer materializeLine: (line copyAfter: Character space).
 	self application tools inspector inspect: object
 ]
 
