@@ -32,10 +32,8 @@ RmRunnerExecutionEnvironment >> activateRunner [
 
 	runner isRunning ifTrue: [ ^ self ].
 
-	"runner archetype interactive."
 	runner spawn.
-	"runner listenToLog."
-	runner listenToFile.
+	runner listenToLog.
 	runnerActivationAction 
 		ifNotNil: [ runnerActivationAction value: runner ]
 ]

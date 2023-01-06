@@ -12,6 +12,9 @@ Class {
 		'quitOnStop',
 		'readListener'
 	],
+	#classVars : [
+		'RunningWorker'
+	],
 	#category : #'PharoRI-Worker'
 }
 
@@ -138,7 +141,10 @@ RmRemoteWorker >> start [
 		self stdin.
 		self stdout.
 		self launchReadListener.
-		'Remote runner started' emit ]
+		'Remote runner started' emit ].
+	"register worker to avoid GC. This is important! (but there should be just one worker 
+	 for images, and in that case we need to register just one"
+	RunningWorker := self
 ]
 
 { #category : #private }

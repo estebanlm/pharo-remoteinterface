@@ -199,7 +199,7 @@ RmRemoteRunner >> handleLine: line [
 { #category : #private }
 RmRemoteRunner >> handleWarning: aWarning [
 
-	aWarning asBeaconSignal emit.
+	aWarning emit.
 	aWarning resume
 ]
 

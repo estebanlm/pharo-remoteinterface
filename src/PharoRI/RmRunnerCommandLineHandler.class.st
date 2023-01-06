@@ -45,7 +45,7 @@ RmRunnerCommandLineHandler >> activate [
 	
 	(self argumentAt: 1) = 'start' ifTrue: [ self startRunner ].
 	
-	'Runner by command line STARTED' asBeaconSignal emit
+	'Runner by command line STARTED' emit
 ]
 
 { #category : #actions }
