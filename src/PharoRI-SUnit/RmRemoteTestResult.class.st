@@ -17,7 +17,7 @@ RmRemoteTestResult >> addError: testCase error: anError [
 	self addError: testCase.
 	self errorTraces
 		at: testCase 
-		put: anError asPmiAnswer
+		put: anError asRmAnswer
 ]
 
 { #category : #adding }
@@ -49,8 +49,8 @@ RmRemoteTestResult >> runCase: aTestCase [
 		aTestCase runCaseManaged.
 		aTestCase announce: TestCaseEnded  withResult: self.
 		self addPass: aTestCase ]
-	on: self class failure , self class skip, self class warning, self class error
-	do: [ :e | e remoteSunitAnnounce: aTestCase toResult: self ]
+	on: self class failure, self class skip, self class warning, self class error
+	do: [ :e | e remoteSUnitAnnounce: aTestCase toResult: self ]
 ]
 
 { #category : #running }
@@ -64,8 +64,8 @@ RmRemoteTestResult >> runCaseForDebug: aTestCase [
 		errors remove: aTestCase ifAbsent: [].
 		failures remove: aTestCase ifAbsent: [].
 		self addPass: aTestCase ]
-	on: self class failure , self class skip, self class warning, self class error
+	on: self class failure, self class skip, self class warning, self class error
 	do: [ :e | 
-		e remoteSunitAnnounce: aTestCase toResult: self. 
+		e remoteSUnitAnnounce: aTestCase toResult: self. 
 		e pass ]
 ]

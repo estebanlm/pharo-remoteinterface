@@ -1,7 +1,7 @@
 Extension { #name : #Announcement }
 
 { #category : #'*PharoRI' }
-Announcement >> asPmiNotification [
+Announcement >> asRmNotification [
 
 	^ self
 ]

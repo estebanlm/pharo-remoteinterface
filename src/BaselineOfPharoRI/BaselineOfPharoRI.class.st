@@ -14,13 +14,14 @@ BaselineOfPharoRI >> baseline: spec [
 
 		spec 
 			package: 'PharoRI' with: [ spec requires: #('Glib' 'Beacon') ]; 
-			package: 'PharoRI-DrTests' with: [ spec requires: #('PharoRI') ]; 
+			package: 'PharoRI-SUnit' with: [ spec requires: #('PharoRI') ]; 
+			package: 'PharoRI-DrTests' with: [ spec requires: #('PharoRI' 'PharoRI-SUnit') ]; 
 			package: 'PharoRI-Tests' with: [ spec requires: #('PharoRI') ];
 			package: 'PharoRI-GUI' with: [ spec requires: #('PharoRI') ].
 
 		spec
 			group: 'default' with: #('all'); 
-			group: 'core' with: #('PharoRI');
+			group: 'core' with: #('PharoRI' 'PharoRI-SUnit');
 			group: 'gui' with: #('core' 'PharoRI-GUI');
 			group: 'tests' with: #('core' 'PharoRI-Tests');
 			group: 'all' with: #('core' 'gui' 'tests' 'PharoRI-DrTests') ]

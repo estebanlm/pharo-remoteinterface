@@ -108,7 +108,7 @@ RmRemoteRunnerTest >> testTryError [
 		yourself.
 
 	error := Error new messageText: 'Test'.
-	errorLine := self writeAnswer: ERROR object: (error asPmiAnswer
+	errorLine := self writeAnswer: ERROR object: (error asRmAnswer
 		id: future id;
 		yourself). 
 
@@ -134,7 +134,7 @@ RmRemoteRunnerTest >> testTryNotify [
 
 	"Notification are just announced, not kept as errors"
 
-	notifyLine := self writeAnswer: NOTIFY object: 42 asPmiNotification. 
+	notifyLine := self writeAnswer: NOTIFY object: 42 asRmNotification. 
 
 	objectAnnounced := nil.
 	worker announcer
@@ -155,7 +155,7 @@ RmRemoteRunnerTest >> testTrySuccess [
 		onSuccess: [ :value | result := value ];
 		yourself.
 
-	line := self writeAnswer: RESULT object: (42 asPmiAnswer
+	line := self writeAnswer: RESULT object: (42 asRmAnswer
 		id: future id;
 		yourself). 
 

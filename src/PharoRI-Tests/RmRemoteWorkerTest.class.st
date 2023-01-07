@@ -27,7 +27,7 @@ RmRemoteWorkerTest >> setUp [
 RmRemoteWorkerTest >> testNotify [
 	| notified worker |
 
-	runner notify: TestAnnouncement new asPmiNotification.
+	runner notify: TestAnnouncement new asRmNotification.
 	self 
 		assert: runner stdout contents trimmed  
 		equals: '-n:TestAnnouncement{}'.
@@ -47,7 +47,7 @@ RmRemoteWorkerTest >> testNotify [
 RmRemoteWorkerTest >> testNotifyNotAnAnnouncement [
 	| notified worker value |
 
-	runner notify: 42 asPmiNotification.
+	runner notify: 42 asRmNotification.
 	self 
 		assert: runner stdout contents trimmed  
 		equals: '-n:RmRemoteNotificationAnnouncement{#value:42}'.

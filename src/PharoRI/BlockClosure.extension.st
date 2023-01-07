@@ -1,7 +1,7 @@
 Extension { #name : #BlockClosure }
 
 { #category : #'*PharoRI' }
-BlockClosure >> asPmiCommand [
+BlockClosure >> asRmCommand [
 
 	^ RmEvaluate do: self
 ]

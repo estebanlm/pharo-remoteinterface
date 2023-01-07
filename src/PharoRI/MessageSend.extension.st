@@ -1,7 +1,7 @@
 Extension { #name : #MessageSend }
 
 { #category : #'*PharoRI' }
-MessageSend >> asPmiCommand [
+MessageSend >> asRmCommand [
 
 	^ RmEvaluate do: self
 ]

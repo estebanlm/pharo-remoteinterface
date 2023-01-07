@@ -1,7 +1,7 @@
 Extension { #name : #Exception }
 
 { #category : #'*PharoRI' }
-Exception >> asPmiAnswer [
+Exception >> asRmAnswer [
 
 	^ RmErrorAnswer newValue: self
 ]

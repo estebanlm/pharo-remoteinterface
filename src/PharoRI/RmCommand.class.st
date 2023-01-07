@@ -18,7 +18,7 @@ RmCommand class >> nextId [
 ]
 
 { #category : #converting }
-RmCommand >> asPmiCommand [
+RmCommand >> asRmCommand [
 
 	^ self
 ]

@@ -204,7 +204,7 @@ RmRemoteWorker >> writeError: anError [
 
 	self 
 		writeAnswer: ERROR 
-		object: anError asPmiAnswer
+		object: anError asRmAnswer
 ]
 
 { #category : #private }
@@ -212,7 +212,7 @@ RmRemoteWorker >> writeError: anError ofCommand: aCommand [
 
 	self 
 		writeAnswer: ERROR 
-		object: (anError asPmiAnswer
+		object: (anError asRmAnswer
 			id: aCommand id;
 			yourself)
 ]
@@ -222,7 +222,7 @@ RmRemoteWorker >> writeNotify: anObject [
 
 	self 
 		writeAnswer: NOTIFY 
-		object: anObject asPmiNotification
+		object: anObject asRmNotification
 ]
 
 { #category : #private }
@@ -230,7 +230,7 @@ RmRemoteWorker >> writeResult: anObject ofCommand: aCommand [
 
 	self 
 		writeAnswer: RESULT 
-		object: (anObject asPmiAnswer
+		object: (anObject asRmAnswer
 			id: aCommand id;
 			yourself)
 ]

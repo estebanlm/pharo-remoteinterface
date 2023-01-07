@@ -24,7 +24,7 @@ RmAnswer class >> newValue: anObject [
 ]
 
 { #category : #converting }
-RmAnswer >> asPmiAnswer [
+RmAnswer >> asRmAnswer [
 
 	^ self
 ]

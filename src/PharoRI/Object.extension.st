@@ -1,13 +1,13 @@
 Extension { #name : #Object }
 
 { #category : #'*PharoRI' }
-Object >> asPmiAnswer [
+Object >> asRmAnswer [
 
 	^ RmAnswer newValue: self
 ]
 
 { #category : #'*PharoRI' }
-Object >> asPmiNotification [
+Object >> asRmNotification [
 
 	^ RmRemoteNotificationAnnouncement newValue: self
 ]

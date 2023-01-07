@@ -153,7 +153,7 @@ RmRemoteRunner >> errorChannel [
 { #category : #commands }
 RmRemoteRunner >> evaluate: aBlock [
 
-	^ self runCommand: aBlock asPmiCommand
+	^ self runCommand: aBlock asRmCommand
 ]
 
 { #category : #finalization }
@@ -449,7 +449,7 @@ RmRemoteRunner >> runCommand: aCommand [
 	sem := Semaphore new.
 	aborted := false.
 	self schedule: [
-		(self pushFutureFor: aCommand asPmiCommand)
+		(self pushFutureFor: aCommand asRmCommand)
 			onSuccess: [ :remoteAnswer |
 				result := remoteAnswer.
 				sem signal ];
@@ -474,7 +474,7 @@ RmRemoteRunner >> runCommand: aCommand onSuccess: aBlock [
 
 	self ensureRunning.
 	self schedule: [ 
-		(self pushFutureFor: aCommand asPmiCommand)
+		(self pushFutureFor: aCommand asRmCommand)
 			onSuccess: aBlock;
 			onError: [ :e | RmRemoteError signalForException: e ];
 			onAbort: [ ];
@@ -486,7 +486,7 @@ RmRemoteRunner >> runCommand: aCommand onSuccess: aBlock onError: errorBlock [
 
 	self ensureRunning.
 	self schedule: [ 
-		(self pushFutureFor: aCommand asPmiCommand)
+		(self pushFutureFor: aCommand asRmCommand)
 			onSuccess: aBlock;
 			onError: errorBlock;
 			onAbort: [ ];
