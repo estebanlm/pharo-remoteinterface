@@ -13,12 +13,6 @@ Object >> asPmiNotification [
 ]
 
 { #category : #'*PharoRI' }
-Object >> emit [
-
-	self asBeaconSignal emit
-]
-
-{ #category : #'*PharoRI' }
 Object >> isException [ 
 	^ false
 ]
