@@ -493,22 +493,6 @@ RmRemoteRunner >> runCommand: aCommand onSuccess: aBlock onError: errorBlock [
 			execute ]
 ]
 
-{ #category : #commands }
-RmRemoteRunner >> runSuite: suite [
-
-	^ self runCommand: (RmRunTestSuite new 
-		suite: suite;
-		yourself)
-]
-
-{ #category : #commands }
-RmRemoteRunner >> runTest: aTestCase [
-
-	^ self runCommand: (RmRunTestCase new 
-		testCase: aTestCase;
-		yourself) 
-]
-
 { #category : #private }
 RmRemoteRunner >> schedule: aBlock [
 
