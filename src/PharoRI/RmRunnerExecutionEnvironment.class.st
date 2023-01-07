@@ -3,7 +3,8 @@ Class {
 	#superclass : #DefaultExecutionEnvironment,
 	#instVars : [
 		'runner',
-		'runnerActivationAction'
+		'runnerActivationAction',
+		'runLocal'
 	],
 	#classVars : [
 		'InWorker'
@@ -50,7 +51,14 @@ RmRunnerExecutionEnvironment >> initialize [
 
 	super initialize.
 	runner := RmRemoteRunner new.
-	runner archetype poolSize: 10
+	runner archetype poolSize: 10.
+	runLocal := false
+]
+
+{ #category : #testing }
+RmRunnerExecutionEnvironment >> isRunningInLocal [
+
+	^ runLocal
 ]
 
 { #category : #testing }
@@ -77,10 +85,22 @@ RmRunnerExecutionEnvironment >> remoteRunTestCase: aTestCase [
 	result skipped ifNotEmpty: [ :skipped | TestResult skip signal ]
 ]
 
+{ #category : #accessing }
+RmRunnerExecutionEnvironment >> runLocal [
+
+	runLocal := true
+]
+
+{ #category : #accessing }
+RmRunnerExecutionEnvironment >> runRemote [
+
+	runLocal := false
+]
+
 { #category : #controlling }
 RmRunnerExecutionEnvironment >> runTestCase: aTestCase [
 
-	self isWorker 
+	(self isWorker or: [ self isRunningInLocal ])
 		ifTrue: [ super runTestCase: aTestCase ]
 		ifFalse: [ self remoteRunTestCase: aTestCase ]
 ]
