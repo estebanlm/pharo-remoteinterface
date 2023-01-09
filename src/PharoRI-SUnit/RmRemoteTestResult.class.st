@@ -17,7 +17,7 @@ RmRemoteTestResult >> addError: testCase error: anError [
 	self addError: testCase.
 	self errorTraces
 		at: testCase 
-		put: anError asRmAnswer
+		put: anError
 ]
 
 { #category : #adding }
@@ -29,16 +29,30 @@ RmRemoteTestResult >> addFailure: testCase failure: aFailure [
 		put: aFailure
 ]
 
+{ #category : #converting }
+RmRemoteTestResult >> asRmAnswer [
+
+	^ RmRemoteTestResultAnswer newValue: self	
+]
+
 { #category : #accessing }
 RmRemoteTestResult >> errorTraces [
 
-	^ errorTraces ifNil: [ errorTraces := Dictionary new ]
+	^ errorTraces
 ]
 
 { #category : #accessing }
 RmRemoteTestResult >> failureTraces [
 
-	^ failureTraces ifNil: [ failureTraces := Dictionary new ]
+	^ failureTraces
+]
+
+{ #category : #initialization }
+RmRemoteTestResult >> initialize [
+
+	super initialize.
+	errorTraces := Dictionary new.
+	failureTraces := Dictionary new
 ]
 
 { #category : #running }
@@ -50,7 +64,10 @@ RmRemoteTestResult >> runCase: aTestCase [
 		aTestCase announce: TestCaseEnded  withResult: self.
 		self addPass: aTestCase ]
 	on: self class failure, self class skip, self class warning, self class error
-	do: [ :e | e remoteSUnitAnnounce: aTestCase toResult: self ]
+	do: [ :e | 
+		(e freezeUpTo: thisContext home) 
+			remoteSUnitAnnounce: aTestCase 
+			toResult: self ]
 ]
 
 { #category : #running }
@@ -66,6 +83,8 @@ RmRemoteTestResult >> runCaseForDebug: aTestCase [
 		self addPass: aTestCase ]
 	on: self class failure, self class skip, self class warning, self class error
 	do: [ :e | 
-		e remoteSUnitAnnounce: aTestCase toResult: self. 
+		(e freezeUpTo: thisContext home) 
+			remoteSUnitAnnounce: aTestCase 
+			toResult: self. 
 		e pass ]
 ]
