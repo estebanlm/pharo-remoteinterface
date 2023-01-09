@@ -369,12 +369,11 @@ RmRemoteRunner >> printOn: stream [
 
 { #category : #private }
 RmRemoteRunner >> pushError: anAnswer [
-	
-	"if there is no id, means an error occured outside the command/answer cycle. 
+
+	"if there is no id, means an error occured outside the command/answer cycle.
 	 We need yo process it"
-	anAnswer id ifNil: [ 
+	anAnswer id ifNil: [
 		anAnswer value debug ].
-	'ERROR' printToStdout.
 	(self removeFutureAt: anAnswer id) resolveAsError: anAnswer value.
 	self announce: (RmRemoteErrorAnnouncement newAnswer: anAnswer)
 ]
