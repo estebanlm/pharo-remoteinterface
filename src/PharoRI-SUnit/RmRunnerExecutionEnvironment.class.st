@@ -9,7 +9,7 @@ Class {
 	#classVars : [
 		'InWorker'
 	],
-	#category : #'PharoRI-Runner'
+	#category : #'PharoRI-SUnit-Base'
 }
 
 { #category : #accessor }
@@ -18,7 +18,7 @@ RmRunnerExecutionEnvironment class >> inWorkerDuring: aBlock [
 
 	oldWorker := InWorker.
 	InWorker := true.
-	^ aBlock ensure: [ 
+	^ aBlock ensure: [
 		InWorker := oldWorker ]
 ]
 
@@ -35,7 +35,7 @@ RmRunnerExecutionEnvironment >> activateRunner [
 
 	runner spawn.
 	runner listenToLog.
-	runnerActivationAction 
+	runnerActivationAction
 		ifNotNil: [ runnerActivationAction value: runner ]
 ]
 
@@ -80,8 +80,8 @@ RmRunnerExecutionEnvironment >> remoteRunTestCase: aTestCase [
 	| result |
 
 	result := self ensureRunner runTest: aTestCase.
-	result errors ifNotEmpty: [ :errors | TestResult error signal ].
-	result failures ifNotEmpty: [ :failures | TestResult failure signal ].
+	result errors ifNotEmpty: [ :errors | (result errorTraceFor: errors first) debug ].
+	result failures ifNotEmpty: [ :failures | (result failureTraceFor: failures first)  debug ].
 	result skipped ifNotEmpty: [ :skipped | TestResult skip signal ]
 ]
 
