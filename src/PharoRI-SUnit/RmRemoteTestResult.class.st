@@ -36,9 +36,21 @@ RmRemoteTestResult >> asRmAnswer [
 ]
 
 { #category : #accessing }
+RmRemoteTestResult >> errorTraceFor: aTestCase [
+
+	^ self errorTraces at: aTestCase
+]
+
+{ #category : #accessing }
 RmRemoteTestResult >> errorTraces [
 
 	^ errorTraces
+]
+
+{ #category : #accessing }
+RmRemoteTestResult >> failureTraceFor: aTestCase [
+
+	^ self failureTraces at: aTestCase
 ]
 
 { #category : #accessing }
