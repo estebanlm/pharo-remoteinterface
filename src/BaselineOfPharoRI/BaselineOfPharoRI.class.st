@@ -33,7 +33,7 @@ BaselineOfPharoRI >> beacon: spec [
 	spec baseline: 'Beacon' with: [ 
 		spec 
 			repository: 'github://pharo-project/pharo-beacon/repository';
-			loads: #('Beacon-ExtraSignals' 'Beacon-SerializingLoggers') ]
+			loads: #('Beacon-File' 'Beacon-ExtraSignals' 'Beacon-SerializingLoggers') ]
 ]
 
 { #category : #'external projects' }
