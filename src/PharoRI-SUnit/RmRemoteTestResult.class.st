@@ -69,34 +69,34 @@ RmRemoteTestResult >> initialize [
 
 { #category : #running }
 RmRemoteTestResult >> runCase: aTestCase [
-	
+
 	[
 		aTestCase announce: TestCaseStarted withResult: self.
 		aTestCase runCaseManaged.
-		aTestCase announce: TestCaseEnded  withResult: self.
+		aTestCase announce: TestCaseEnded withResult: self.
 		self addPass: aTestCase ]
 	on: self class failure, self class skip, self class warning, self class error
-	do: [ :e | 
-		(e freezeUpTo: thisContext home) 
-			remoteSUnitAnnounce: aTestCase 
+	do: [ :e |
+		(e originException freezeUpTo: thisContext home)
+			remoteSUnitAnnounce: aTestCase
 			toResult: self ]
 ]
 
 { #category : #running }
 RmRemoteTestResult >> runCaseForDebug: aTestCase [
-	
+
 	[
 		aTestCase announce: TestCaseStarted withResult: self.
 		aTestCase runCaseManaged.
-		aTestCase announce: TestCaseEnded  withResult: self.
+		aTestCase announce: TestCaseEnded withResult: self.
 		"To not affect performance of big test suites following logic is not inside addPass: method"
 		errors remove: aTestCase ifAbsent: [].
 		failures remove: aTestCase ifAbsent: [].
 		self addPass: aTestCase ]
 	on: self class failure, self class skip, self class warning, self class error
-	do: [ :e | 
-		(e freezeUpTo: thisContext home) 
-			remoteSUnitAnnounce: aTestCase 
-			toResult: self. 
+	do: [ :e |
+		(e originException freezeUpTo: thisContext home)
+			remoteSUnitAnnounce: aTestCase
+			toResult: self.
 		e pass ]
 ]

@@ -80,8 +80,10 @@ RmRunnerExecutionEnvironment >> remoteRunTestCase: aTestCase [
 	| result |
 
 	result := self ensureRunner runTest: aTestCase.
-	result errors ifNotEmpty: [ :errors | (result errorTraceFor: errors first) debug ].
-	result failures ifNotEmpty: [ :failures | (result failureTraceFor: failures first)  debug ].
+	result errors ifNotEmpty: [ :errors |
+		RmRemoteError signalForException: (result errorTraceFor: errors anyOne) ].
+	result failures ifNotEmpty: [ :failures |
+		RmRemoteTestFailure signalForException: (result failureTraceFor: failures anyOne) ].
 	result skipped ifNotEmpty: [ :skipped | TestResult skip signal ]
 ]
 
