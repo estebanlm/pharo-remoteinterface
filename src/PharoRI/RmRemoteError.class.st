@@ -18,10 +18,10 @@ RmRemoteError class >> signalForException: anError [
 		signal
 ]
 
-{ #category : #accessing }
+{ #category : #handling }
 RmRemoteError >> defaultAction [
 
-	self exception debug
+	self exception defaultAction
 ]
 
 { #category : #accessing }
@@ -34,4 +34,10 @@ RmRemoteError >> exception [
 RmRemoteError >> exception: anObject [
 
 	exception := anObject
+]
+
+{ #category : #accessing }
+RmRemoteError >> originException [
+
+	^ self exception originException
 ]
