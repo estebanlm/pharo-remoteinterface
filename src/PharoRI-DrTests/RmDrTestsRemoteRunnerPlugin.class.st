@@ -21,15 +21,15 @@ RmDrTestsRemoteRunnerPlugin class >> weight [
 
 { #category : #private }
 RmDrTestsRemoteRunnerPlugin >> ensureRemoteWorker [
-	
+
 	self isRemoteWorkerRunning ifTrue: [ ^ worker ].
 
-	worker := PmiRemoteRunner new.
+	worker := RmRemoteRunner new.
 	worker archetype poolSize: 10.
 	worker spawn.
 
 	WeakRegistry default
-		add: self 
+		add: self
 		executor: (RmRemoteWorkerFinalizer newWorker: worker).
 
 	^ worker
