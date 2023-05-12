@@ -7,7 +7,10 @@ Class {
 		'clearButton',
 		'detailText',
 		'announcementList',
-		'inspectButton'
+		'inspectButton',
+		'stopButton',
+		'runnerToolbar',
+		'listenButton'
 	],
 	#category : #'PharoRI-GUI'
 }
@@ -27,7 +30,9 @@ RmRunnerPresenter >> connectPresenters [
 		transform: [ :ann | 
 			ann 
 				ifNotNil: [ ann signal printString ]
-				ifNil: [ '' ] ]
+				ifNil: [ '' ] ].
+			
+	self whenSelectionChangedDo: [ self updateSelectionBasedActions ]
 ]
 
 { #category : #'api - focus' }
@@ -41,10 +46,8 @@ RmRunnerPresenter >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		add: (SpBoxLayout newHorizontal
-				borderWidth: 3;
-				spacing: 3;
-				addLast: inspectButton expand: false;
-				addLast: clearButton expand: false;
+				hAlignEnd;
+				add: runnerToolbar;
 				yourself) 
 			expand: false;
 		add: (SpPanedLayout newVertical
@@ -54,11 +57,29 @@ RmRunnerPresenter >> defaultLayout [
 		yourself
 ]
 
+{ #category : #private }
+RmRunnerPresenter >> disableAllActions [
+
+	^ runnerToolbar items do: [ :each | each enabled: false ]
+]
+
 { #category : #actions }
 RmRunnerPresenter >> doClear [
 
 	self model removeAll.
 	self updatePresenter
+]
+
+{ #category : #actions }
+RmRunnerPresenter >> doDisableLogging [
+
+	self model disableLogging
+]
+
+{ #category : #actions }
+RmRunnerPresenter >> doEnableLogging [
+
+	self model enableLogging
 ]
 
 { #category : #actions }
@@ -70,22 +91,45 @@ RmRunnerPresenter >> doInspect [
 	self application tools inspector inspect: object
 ]
 
+{ #category : #actions }
+RmRunnerPresenter >> doStop [
+	
+	self model stop
+]
+
 { #category : #initialization }
 RmRunnerPresenter >> initializePresenters [
 
-	inspectButton := self newButton
-		label: 'Inspect';
-		action: [ self doInspect ];
-		yourself.
-	clearButton := self newButton
-		label: 'Clear';
-		action: [ self doClear ];
+	runnerToolbar := self newToolbar 
+		add: (inspectButton := self newToolbarButton
+			label: 'Inspect';
+			icon: (self iconNamed: #smallInspectIt);
+			action: [ self doInspect ];
+			yourself);
+		add: (clearButton := self newToolbarButton
+			label: 'Clear';
+			icon: (self iconNamed: #smallDelete);
+			help: 'Clear log events';
+			action: [ self doClear ];
+			yourself);
+		add: (listenButton := self newToolbarToggleButton
+			label: 'Listen';
+			icon: (self iconNamed: #smallVolume);
+			help: 'Enable/disable listening to log.';
+			state: self model isListening;
+			whenActivatedDo: [ self doEnableLogging ];
+			whenDeactivatedDo: [ self doDisableLogging ];
+			yourself);
+		add: (stopButton := self newToolbarButton
+			label: 'Stop';
+			icon: (self iconNamed: #stop);
+			help: 'Stop worker';
+			action: [ self doStop ];
+			yourself);
 		yourself.
 
-	announcementList := self newTable
-		beResizable;
-		addColumn: ((SpStringTableColumn title: 'Worker' evaluated: #runnerId) width: 200);
-		addColumn: (SpStringTableColumn title: 'Log' evaluated: #line);
+	announcementList := self newList
+		display: [ :each | each line ];
 		yourself.
 		
 	detailText := self newText
@@ -120,15 +164,31 @@ RmRunnerPresenter >> unsubscribeFromAnnouncers [
 ]
 
 { #category : #initialization }
+RmRunnerPresenter >> updateActions [
+
+	self updateSelectionBasedActions.
+	listenButton enabled: self model isRunning.
+	stopButton enabled: self model isRunning
+]
+
+{ #category : #initialization }
 RmRunnerPresenter >> updatePresenter [
 
-	(self model isNil or: [ self model hasAnnouncements not ]) 
-		ifTrue: [  
+	self model ifNil: [
 			announcementList items: #().
+			self disableAllActions.
 			^ self ].
 
-	announcementList updateItemsKeepingSelection: self model announcements.
+	"announcementList updateItemsKeepingSelection: "
+	announcementList items: self model announcements.
 	announcementList 
 		selectIndex: self model announcements size 
-		scrollToSelection: true
+		scrollToSelection: true.
+	self updateActions
+]
+
+{ #category : #initialization }
+RmRunnerPresenter >> updateSelectionBasedActions [
+
+	inspectButton enabled: announcementList selectedItem notNil
 ]

@@ -14,6 +14,18 @@ RmRunnerModel class >> on: aRunner [
 ]
 
 { #category : #accessing }
+RmRunnerModel >> disableLogging [
+
+	runner startListenToLog
+]
+
+{ #category : #accessing }
+RmRunnerModel >> enableLogging [
+
+	runner startListenToLog
+]
+
+{ #category : #accessing }
 RmRunnerModel >> iconName [
 
 	^ self runner isRunning
@@ -28,13 +40,19 @@ RmRunnerModel >> initialize [
 	super initialize.
 ]
 
+{ #category : #testing }
+RmRunnerModel >> isRunning [
+	
+	^ runner isRunning 
+]
+
 { #category : #accessing }
 RmRunnerModel >> label [
 	
 	^ self runner id
 ]
 
-{ #category : #adding }
+{ #category : #accessing }
 RmRunnerModel >> maybeAdd: anAnnouncement [
 
 	anAnnouncement runner == self runner ifFalse: [ ^ self ].
@@ -51,4 +69,10 @@ RmRunnerModel >> runner [
 RmRunnerModel >> runner: anObject [
 
 	runner := anObject
+]
+
+{ #category : #accessing }
+RmRunnerModel >> stop [
+	
+	runner quit
 ]

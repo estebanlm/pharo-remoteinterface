@@ -21,7 +21,7 @@ RmRemoteReactionTest >> testRemoteHaltRaisesDebuggerInHost [
 	worker := RmRemoteRunner new.
 	worker archetype logToStderr. 
 	worker spawn.
-	worker listenToLog.
+	worker startListenToLog.
 	
 	self assert: worker isRunning.
 	self 

@@ -72,7 +72,7 @@ RmRemoteRunner class >> newId: aString [
 { #category : #private }
 RmRemoteRunner class >> registerWorker: aRunner [
 
-	ActiveRunners ifNil: [ ActiveRunners := WeakRegistry new ].
+	ActiveRunners ifNil: [ ActiveRunners := FinalizationRegistry new ].
 	ActiveRunners add: aRunner.
 	
 	self logAnnouncer announce: (RmRemoteRunnerRegisteredAnnouncement new 
@@ -294,36 +294,6 @@ RmRemoteRunner >> launchWaitForLogListener [
 	errorListener start
 ]
 
-{ #category : #accessing }
-RmRemoteRunner >> listenToFile [
-
-	self isRunning 
-		ifFalse: [ self error: 'RemoteWorker not running' ].
-		
-	self runCommand: [ 
-		FileLogger new 
-			filename: 'worker.log';
-			append: true;
-			serializer: RmSTONSerializer new;
-			start.
-		true	]
-]
-
-{ #category : #accessing }
-RmRemoteRunner >> listenToLog [
-
-	self isRunning 
-		ifFalse: [ self error: 'RemoteWorker not running' ].
-		
-	self launchWaitForLogListener.
-	self runCommand: [ 
-		FileLogger new 
-			serializer: RmSTONSerializer new;
-			stream: Stdio stderr;
-			start.
-		true	]
-]
-
 { #category : #private }
 RmRemoteRunner >> logWorkerSignal: line [
 
@@ -536,6 +506,21 @@ RmRemoteRunner >> spawn [
 	self archetype workerStartedOn: self
 ]
 
+{ #category : #accessing }
+RmRemoteRunner >> startListenToLog [
+
+	self isRunning 
+		ifFalse: [ self error: 'RemoteWorker not running' ].
+		
+	self launchWaitForLogListener.
+	self runCommand: [ 
+		FileLogger new 
+			serializer: RmSTONSerializer new;
+			stream: Stdio stderr;
+			start.
+		true	]
+]
+
 { #category : #'private - listeners' }
 RmRemoteRunner >> stopAllListeners [
 
@@ -558,7 +543,10 @@ RmRemoteRunner >> stopListenToLog [
 	self isRunning 
 		ifFalse: [ self error: 'RemoteWorker not running' ].
 		
-	self stopErrorListener
+	self stopErrorListener.
+	self runCommand: [ 
+		FileLogger allInstancesDo: [ :each | each stop ].
+		true ]
 ]
 
 { #category : #'private - listeners' }

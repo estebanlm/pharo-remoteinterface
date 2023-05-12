@@ -34,7 +34,7 @@ RmRunnerExecutionEnvironment >> activateRunner [
 	runner isRunning ifTrue: [ ^ self ].
 
 	runner spawn.
-	runner listenToLog.
+	runner startListenToLog.
 	runnerActivationAction
 		ifNotNil: [ runnerActivationAction value: runner ]
 ]

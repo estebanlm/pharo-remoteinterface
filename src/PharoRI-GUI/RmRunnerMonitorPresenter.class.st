@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'runnerList',
 		'runnerPresenter',
-		'runners'
+		'runners',
+		'runnerListToolbar'
 	],
 	#category : #'PharoRI-GUI'
 }
@@ -16,15 +17,41 @@ RmRunnerMonitorPresenter class >> open [
 	self new open
 ]
 
-{ #category : #initialization }
+{ #category : #'world menu' }
+RmRunnerMonitorPresenter class >> runnerMonitorMenu: aBuilder [
+	<worldMenu>
+	
+	(aBuilder item: #'Remote Worker Monitor')
+		parent: #SystemTools;
+		action: [ self open ];
+		order: 4;
+		help: 'Monitor your remote workers.';
+		icon: (aBuilder iconNamed: self taskbarIconName)
+]
+
+{ #category : #'world menu' }
+RmRunnerMonitorPresenter class >> taskbarIconName [
+
+	^ #processBrowser
+]
+
+{ #category : #private }
 RmRunnerMonitorPresenter >> allRunnerModels [
 
-	^ runners ifNil: [ 
-		runners := { RmAllRunnersModel new }, 
-			(((RmRemoteRunner activeRunners ifNil: [ #() ])
-				reject: [ :each | each isNil ])
-				collect: [ :each | RmRunnerModel on: each ]
-				as: Array) ]
+	^ runners 
+		ifNil: [ 
+			runners := self collectRunnerModels ]
+]
+
+{ #category : #private }
+RmRunnerMonitorPresenter >> collectRunnerModels [
+	
+	^ ((RmRemoteRunner activeRunners 
+			ifNotNil: [ :aRegistry | aRegistry keys ]
+			ifNil: [ #() ])
+		reject: [ :each | each isNil ])
+		collect: [ :each | RmRunnerModel on: each ]
+		as: Array
 ]
 
 { #category : #initialization }
@@ -43,13 +70,31 @@ RmRunnerMonitorPresenter >> defaultLayout [
 
 	^ SpPanedLayout newHorizontal
 		positionOfSlider: 30 percent;
-		add: runnerList;
+		add: (SpBoxLayout newVertical 
+			add: runnerListToolbar expand: false;
+			add: runnerList;
+			yourself);
 		add: runnerPresenter;
 		yourself
 ]
 
+{ #category : #actions }
+RmRunnerMonitorPresenter >> doRefresh [
+
+	runners := runners select: [ :each | each isRunning ].
+	self updatePresenter
+]
+
 { #category : #initialization }
 RmRunnerMonitorPresenter >> initializePresenters [
+
+	runnerListToolbar := self newToolbar.
+	runnerListToolbar add: (self newToolbarButton
+		label: 'Refresh';
+		icon: (self iconNamed: #smallUpdate);
+		help: 'Refresh runner list'; 
+		action: [ self doRefresh ];
+		yourself).
 
 	runnerList := self newList
 		display: [ :aModel | aModel label ];
@@ -127,6 +172,5 @@ RmRunnerMonitorPresenter >> updatePresenter [
 		ifNotNil: [ 
 			runnerList updateItemsKeepingSelection: self allRunnerModels ] 
 		ifNil: [ 
-			runnerList items: self allRunnerModels.
-			runnerList selectFirst ]
+			runnerList items: self allRunnerModels ]
 ]
