@@ -30,7 +30,7 @@ RmDrTestsRemoteRunnerPlugin >> ensureRemoteWorker [
 
 	WeakRegistry default
 		add: self
-		executor: (RmRemoteWorkerFinalizer newWorker: worker).
+		finalizer: (RmRemoteWorkerFinalizer newWorker: worker).
 
 	^ worker
 ]
