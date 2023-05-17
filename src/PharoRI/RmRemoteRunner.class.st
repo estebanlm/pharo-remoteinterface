@@ -85,7 +85,7 @@ RmRemoteRunner class >> shutDown: quitting [
 
 	quitting ifFalse: [ ^ self ].
 	ActiveRunners ifNotNil: [ 
-		ActiveRunners do: [ :each | each terminate ].
+		ActiveRunners keys do: [ :each | each terminate ].
 		ActiveRunners := nil ]
 ]
 
